@@ -2,7 +2,7 @@ name: 'Latency'
 
 on:
   schedule:
-    - cron: '*/10 * * * *'
+    - cron: '*/5 * * * *'
     #- cron: '0 * * * *'
 
 jobs:
@@ -28,8 +28,8 @@ jobs:
             const fetch = require('node-fetch')
             const services = require('./services.json')
 
-            let tree = (await (await fetch('https://api.github.com/repos/azurydev/status/git/trees/dev')).json()).tree
-            tree = (await (await fetch(tree.filter(i => i.path === 'data' && type === 'tree')[0].url)).json()).tree
+            //let tree = (await (await fetch('https://api.github.com/repos/azurydev/status/git/trees/dev')).json()).tree
+            //tree = (await (await fetch(tree.filter(i => i.path === 'data' && type === 'tree')[0].url)).json()).tree
 
             // const raw = require('./data/latency.raw.json')
 
