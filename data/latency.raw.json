@@ -1,1 +1,1 @@
-[{"slug":"website","latency":[136,130]},{"slug":"api","latency":[47,56]}]
+[{"slug":"website","latency":[136,130,100]},{"slug":"api","latency":[47,56,32]}]
