@@ -29,7 +29,7 @@ jobs:
             , latencies = require('./data/latency.raw.json')
             , { getLatency } = require('./dist/getLatency.js')
 
-            let tree = (await (await fetch('https://api.github.com/repos/azurydev/status/git/trees/dev')).json()).tree
+            let tree = (await (await fetch('https://api.github.com/repos/azurydev/status/git/trees/master')).json()).tree
             tree = (await (await fetch(tree.filter(i => i.path === 'data' && type === 'tree')[0].url)).json()).tree
 
             const { raw, averages } = await getLatency(fetch, services, latencies)
@@ -38,19 +38,19 @@ jobs:
               owner: context.repo.owner,
               repo: context.repo.repo,
               path: 'data/latency.raw.json',
-              sha: tree.filter(i => i.path === 'latency.raw.json')[0].sha,
+              ...(tree && { sha: tree.filter(i => i.path === 'latency.raw.json')[0].sha }),
               content: Buffer.from(JSON.stringify(raw)).toString('base64'),
               message: 'bumped `latency.raw.json`'
             })
 
-            tree = (await (await fetch('https://api.github.com/repos/azurydev/status/git/trees/dev')).json()).tree
+            tree = (await (await fetch('https://api.github.com/repos/azurydev/status/git/trees/master')).json()).tree
             tree = (await (await fetch(tree.filter(i => i.path === 'data' && type === 'tree')[0].url)).json()).tree
 
             await github.rest.repos.createOrUpdateFileContents({
               owner: context.repo.owner,
               repo: context.repo.repo,
               path: 'data/latency.json',
-              sha: tree.filter(i => i.path === 'latency.json')[0].sha,
+              ...(tree && { sha: tree.filter(i => i.path === 'latency.json')[0].sha }),
               content: Buffer.from(JSON.stringify(averages)).toString('base64'),
               message: 'bumped `latency.json`'
             })
