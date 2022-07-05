@@ -1,0 +1,93 @@
+name: 'Latency'
+
+on:
+  schedule:
+    - cron: '*/10 * * * *'
+    #- cron: '0 * * * *'
+
+jobs:
+  update:
+    runs-on: 'ubuntu-latest'
+
+    steps:
+      - name: 'Git Checkout'
+        uses: 'actions/checkout@v2'
+
+      - name: 'Setup Node.js'
+        uses: 'actions/setup-node@v1'
+        with:
+          node-version: '18.x'
+      
+      - name: 'Install node-fetch'
+        run: 'npm install node-fetch@2'
+
+      - name: 'Update Latency'
+        uses: 'actions/github-script@v6'
+        with:
+          script: |
+            const fetch = require('node-fetch')
+            const services = require('./services.json')
+
+            let tree = (await (await fetch('https://api.github.com/repos/azurydev/status/git/trees/dev')).json()).tree
+            tree = (await (await fetch(tree.filter(i => i.path === 'data' && type === 'tree')[0].url)).json()).tree
+
+            // const raw = require('./data/latency.raw.json')
+
+            const rawLatencies = []
+            const averageLatencies = []
+
+            for (let s of services) {
+              let raw
+              , average
+
+              try {
+                const time = Date.now()
+
+                const res = await fetch(s.url, {
+                  method: s.method ?? 'GET'
+                })
+
+                const latency = Date.now() - time
+
+                raw = {
+                  slug: s.name.replace(' ', '-').toLowerCase(),
+                  latency: [latency]
+                }
+
+                average = {
+                  slug: s.name.replace(' ', '-').toLowerCase(),
+                  latency: `${latency}ms`
+                }
+              } catch (err) {
+                raw = {
+                  slug: s.name.replace(' ', '-').toLowerCase(),
+                  latency: [0]
+                }
+
+                average = {
+                  slug: s.name.replace(' ', '-').toLowerCase(),
+                  latency: '0ms'
+                }
+              }
+
+              rawLatencies.push(raw)
+              averageLatencies.push(average)
+            }
+
+            github.rest.repos.createOrUpdateFileContents({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              path: 'data/latency.raw.json',
+              // sha: tree.filter(i => i.path === 'latency.raw.json')[0].sha,
+              content: (new Buffer(JSON.stringify(rawLatencies))).toString('base64'),
+              message: 'bumped `latency.raw.json`'
+            })
+
+            github.rest.repos.createOrUpdateFileContents({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              path: 'data/latency.json',
+              // sha: tree.filter(i => i.path === 'latency.json')[0].sha,
+              content: (new Buffer(JSON.stringify(averageLatencies))).toString('base64'),
+              message: 'bumped `latency.json`'
+            })
