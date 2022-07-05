@@ -3,7 +3,6 @@ name: 'Latency'
 on:
   schedule:
     - cron: '*/5 * * * *'
-    #- cron: '0 * * * *'
 
 jobs:
   update:
@@ -51,7 +50,7 @@ jobs:
               owner: context.repo.owner,
               repo: context.repo.repo,
               path: 'data/latency.json',
-              // sha: tree.filter(i => i.path === 'latency.json')[0].sha,
+              sha: tree.filter(i => i.path === 'latency.json')[0].sha,
               content: (new Buffer(JSON.stringify(averages))).toString('base64'),
               message: 'bumped `latency.json`'
             })
