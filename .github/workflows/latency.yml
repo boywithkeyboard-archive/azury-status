@@ -26,7 +26,7 @@ jobs:
           script: |
             const fetch = require('node-fetch')
             , services = require('./services.json')
-            , latencies = require('./latency.raw.json')
+            , latencies = require('./data/latency.raw.json')
             , { getLatency } = require('./dist/getLatency.js')
 
             let tree = (await (await fetch('https://api.github.com/repos/azurydev/status/git/trees/dev')).json()).tree
