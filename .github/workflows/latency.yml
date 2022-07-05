@@ -29,10 +29,10 @@ jobs:
             , latencies = require('./data/latency.raw.json')
             , { getLatency } = require('./dist/getLatency.js')
 
+            const { raw, averages } = await getLatency(fetch, services, latencies)
+
             let tree = (await (await fetch('https://api.github.com/repos/azurydev/status/git/trees/master')).json()).tree
             tree = (await (await fetch(tree.filter(i => i.path === 'data' && type === 'tree')[0].url)).json()).tree
-
-            const { raw, averages } = await getLatency(fetch, services, latencies)
 
             await github.rest.repos.createOrUpdateFileContents({
               owner: context.repo.owner,
