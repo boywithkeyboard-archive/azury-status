@@ -39,7 +39,7 @@ jobs:
               repo: context.repo.repo,
               path: 'data/latency.raw.json',
               sha: tree.filter(i => i.path === 'latency.raw.json')[0].sha,
-              content: (new Buffer(JSON.stringify(raw))).toString('base64'),
+              content: Buffer.from(JSON.stringify(raw)).toString('base64'),
               message: 'bumped `latency.raw.json`'
             })
 
@@ -51,6 +51,6 @@ jobs:
               repo: context.repo.repo,
               path: 'data/latency.json',
               sha: tree.filter(i => i.path === 'latency.json')[0].sha,
-              content: (new Buffer(JSON.stringify(averages))).toString('base64'),
+              content: Buffer.from(JSON.stringify(averages)).toString('base64'),
               message: 'bumped `latency.json`'
             })
