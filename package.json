@@ -1,0 +1,13 @@
+{
+  "name": "@azury/status",
+  "private": true,
+  "scripts": {
+    "build:getLatency": "esbuild src/getLatency.ts --bundle --minify --format=cjs --platform=node --outfile=dist/getLatency.js",
+    "build": "npm run build:getLatency"
+  },
+  "devDependencies": {
+    "@types/node": "^18.0.1",
+    "esbuild": "^0.14.48",
+    "typescript": "^4.7.4"
+  }
+}
