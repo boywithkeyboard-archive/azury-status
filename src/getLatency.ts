@@ -46,7 +46,7 @@ export const getLatency = async (
 
     result.averages.push({
       slug,
-      latency: `${entry.latency.reduce((a, b) => a + b, 0) / entry.latency.length}ms`
+      latency: `${Math.round(entry.latency.reduce((a, b) => a + b, 0) / entry.latency.length)}ms`
     })
   }
 
