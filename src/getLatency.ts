@@ -24,7 +24,7 @@ export const getLatency = async (
         slug,
         latency: []
       }
-    else if (entry.latency.length === 720) // 24h * 30d = 720 workflow runs per month
+    else if (entry.latency.length === 336) // 2x * 24h * 7d = 336 workflow runs per week
       entry.latency.shift()
 
     try {
